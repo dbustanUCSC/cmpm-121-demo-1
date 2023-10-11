@@ -10,10 +10,10 @@ const value = document.createElement("div");
 button.innerHTML = buttonEmoj;
 value.innerHTML = counter.toString() + " smiles...";
 
-button.addEventListener('mousedown', function(){
+button.addEventListener("mousedown", function () {
     increment();
 });
-function increment(){
+function increment() {
     counter++;
     value.innerHTML = counter.toString() + " smiles...";
 }
