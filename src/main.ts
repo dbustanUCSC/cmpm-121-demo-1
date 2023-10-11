@@ -15,7 +15,7 @@ button.addEventListener("mousedown", function () {
 });
 function increment() {
     counter++;
-    value.innerHTML = counter.toString() + " smiles...";   
+    value.innerHTML = counter.toString() + " smiles...";
 }
 setInterval(increment, 100);
 const header = document.createElement("h1");
