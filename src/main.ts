@@ -13,16 +13,17 @@ value.innerHTML = counter.toString() + " smiles...";
 button.addEventListener("mousedown", function () {
     increment();
 });
-let t0 = 0;
-let t1;
-let elapsed;
+//let t0 = 0;
+//let t1;
+//let elapsed;
 function increment() {
-    t1 = performance.now();
-    elapsed = t1 - t0;
+    //t1 = performance.now();
+    //elapsed = t1 - t0;
+    counter++;
     value.innerHTML = counter.toString() + " smiles...";
     //we know this is continously calling the same function, thus incrementing it
     //however we need a way to
-    t0 = performance.now();
+    //t0 = performance.now();
     requestAnimationFrame(increment);
 }
 //setInterval(increment, 100);
