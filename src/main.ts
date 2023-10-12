@@ -39,23 +39,27 @@ function tick(now: number) {
     if (counter > 0) {
         value.innerHTML = counter.toFixed(2) + " smiles...";
     }
+    if (counter < costForUpgrade1) {
+        upgrade1Button.disabled = true;
+    } else {
+        upgrade1Button.disabled = false;
+    }
+
     requestAnimationFrame(tick);
 }
 
 requestAnimationFrame(tick);
 
-let upgrade1Emoj = "Please help... 🥸 \n costs: " + costForUpgrade1;
+let upgrade1Emoj = "Please help...    🥸 \n " + costForUpgrade1;
 upgrade1Button.innerHTML = upgrade1Emoj;
 upgrade1Button.addEventListener("mousedown", function () {
-    if (counter >= costForUpgrade1) {
-        upgrade1Purchase();
-    }
+    upgrade1Purchase();
 });
 function upgrade1Purchase() {
-    costForUpgrade1 *= 1.15;
     counter -= costForUpgrade1;
-    upgrade1Emoj = "Please help... 🥸 :). \n costs:" + costForUpgrade1;
+    costForUpgrade1 *= 1.15;
+    costForUpgrade1 = Number(costForUpgrade1.toFixed(2));
+    upgrade1Emoj = "Please help...   🥸 \n" + costForUpgrade1;
     upgrade1Button.innerHTML = upgrade1Emoj;
-    console.log(costForUpgrade1);
     growthRate += 0.1;
 }
