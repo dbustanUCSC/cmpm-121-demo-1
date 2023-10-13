@@ -91,6 +91,7 @@ function upgrade1Purchase() {
     counter -= costForUpgrade1;
     upgrade1Counter++;
     totalUpgrades++;
+    //step 7
     costForUpgrade1 *= 1.15;
     costForUpgrade1 = Number(costForUpgrade1.toFixed(2));
     if (upgrade1Counter > 1) {
