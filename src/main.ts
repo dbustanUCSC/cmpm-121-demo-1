@@ -92,9 +92,11 @@ function upgrade1Purchase() {
     upgrade1Counter++;
     totalUpgrades++;
     //step 7
+
     costForUpgrade1 *= 1.15;
     costForUpgrade1 = Number(costForUpgrade1.toFixed(2));
     if (upgrade1Counter > 1) {
+        //step 8
         upgrade1Emoj =
             "you are a fool. 🤕 (" +
             upgrade1Counter +
