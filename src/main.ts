@@ -68,7 +68,7 @@ function checkCounterLogic() {
 }
 requestAnimationFrame(tick);
 
-let upgrade1Emoj = " 🥸 " + "<br/> costs: " + costForUpgrade1 + " smiles!";
+let upgrade1Emoj = "Help... 🥸 " + "<br/> costs: " + costForUpgrade1 + " smiles!";
 upgrade1Button.innerHTML = upgrade1Emoj;
 upgrade1Button.addEventListener("mousedown", function () {
     upgrade1Purchase();
@@ -150,3 +150,15 @@ function upgrade3Purchase() {
     growthRate += 50;
     upgrade3Button.innerHTML = upgrade3Emoji;
 }
+
+/*interface Item {
+    name: string,
+    cost: number,
+    rate: number
+  };
+  
+  const availableItems : Item[] = [
+    {name: "Help... 🥸", cost: 10, rate: 0.1},
+    {name: "is it time  🤡", cost: 100, rate: 2},
+    {name: "Cmon! choose me :)", cost: 1000, rate: 50},
+  ]; */
