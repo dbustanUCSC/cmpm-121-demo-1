@@ -42,6 +42,8 @@ let growthRate = 0.0;
 
 let lastTime = 0;
 
+let totalUpgrades = 0;
+
 function tick(now: number) {
     const elapsed = now - lastTime;
     lastTime = now;
@@ -54,7 +56,11 @@ function tick(now: number) {
 }
 function checkCounterLogic() {
     if (counter > 0) {
-        value.innerHTML = counter.toFixed(2) + " smiles...";
+        value.innerHTML = counter.toFixed(2) + " smiles..." + "<br/>";
+    }
+    if (totalUpgrades > 0) {
+        value.innerHTML =
+            counter.toFixed(2) + " smiles" + "<br/>" + growthRate.toFixed(2) + " per second.";
     }
     upgrade1Button.disabled = counter < costForUpgrade1;
     upgrade2Button.disabled = counter < costForUpgrade2;
@@ -78,50 +84,66 @@ upgrade3Button.addEventListener("mousedown", function () {
     upgrade3Purchase();
 });
 
-let upgrade3Emoji = "Cmon!.. choose me :)" + "<br/> costs: " + costForUpgrade3 + " smiles!";
+let upgrade3Emoji = "Cmon! choose me :)" + "<br/> costs: " + costForUpgrade3 + " smiles!";
 upgrade3Button.innerHTML = upgrade3Emoji;
 let upgrade1Counter: number = 0;
 function upgrade1Purchase() {
     counter -= costForUpgrade1;
     upgrade1Counter++;
+    totalUpgrades++;
     costForUpgrade1 *= 1.15;
     costForUpgrade1 = Number(costForUpgrade1.toFixed(2));
     if (upgrade1Counter > 1) {
-        upgrade1Emoj = "you are a fool. 🤕 " + "<br/> costs: " + costForUpgrade1 + " smiles";
+        upgrade1Emoj =
+            "you are a fool. 🤕 (" +
+            upgrade1Counter +
+            ")<br/> costs: " +
+            costForUpgrade1 +
+            " smiles";
     } else {
-        upgrade1Emoj = "Help... 🥸" + "<br/> costs: " + costForUpgrade1 + " smiles?";
+        upgrade1Emoj =
+            "Help... 🥸 (" + upgrade1Counter + ")" + "<br/> costs: " + costForUpgrade1 + " smiles?";
     }
 
     upgrade1Button.innerHTML = upgrade1Emoj;
     growthRate += 0.1;
 }
-
+let upgrade2Counter: number = 0;
 function upgrade2Purchase() {
     counter -= costForUpgrade2;
     costForUpgrade2 *= 1.15;
-    let upgrade2Counter: number = 0;
     upgrade2Counter++;
-
+    totalUpgrades++;
     costForUpgrade2 = Number(costForUpgrade2.toFixed(2));
     if (upgrade2Counter > 4) {
-        upgrade2Emoji = "STOP. Why do this to us?" + "<br/> costs: " + costForUpgrade2 + " smiles.";
-    } else {
         upgrade2Emoji =
-            "I don't know if this is right. 😬😬 " +
+            "STOP. Why do this to us?(" +
+            upgrade2Counter +
+            ")" +
             "<br/> costs: " +
             costForUpgrade2 +
-            " smiles..";
+            " smiles.";
+    } else {
+        upgrade2Emoji =
+            "I don't know if this is right. 😬😬 (" +
+            upgrade2Counter +
+            ")" +
+            "<br/> costs: " +
+            costForUpgrade2 +
+            " smiles.";
     }
     upgrade2Button.innerHTML = upgrade2Emoji;
     growthRate += 2;
 }
-
+let upgrade3Counter: number = 0;
 function upgrade3Purchase() {
-    let upgrade3Counter: number = 0;
     upgrade3Counter++;
-    console.debug(upgrade3Counter);
+    totalUpgrades++;
     counter -= costForUpgrade3;
     costForUpgrade3 *= 1.15;
     costForUpgrade3 = Number(costForUpgrade3.toFixed(2));
-    upgrade3Emoji = "HELP!!!! 🎃" + "<br/> costs: " + costForUpgrade3 + " smiles.";
+    upgrade3Emoji =
+        "HELP!!!! 🎃(" + upgrade3Counter + ")<br/> costs: " + costForUpgrade3 + " smiles.";
+    growthRate += 50;
+    upgrade3Button.innerHTML = upgrade3Emoji;
 }
