@@ -5,7 +5,7 @@ const gameName = "our game";
 
 document.title = gameName;
 const smile = document.createElement("button");
-const smileEmoj = "😀";
+let smileEmoj = "😀";
 smile.innerHTML = smileEmoj;
 const value = document.createElement("div");
 
@@ -15,46 +15,70 @@ smile.addEventListener("mousedown", function () {
     counter++;
 });
 
-const upgrade1Button = document.createElement("button");
-const upgrade2Button = document.createElement("button");
-const upgrade3Button = document.createElement("button");
-
-const buttonContainer = document.createElement("div");
-buttonContainer.classList.add("button-container");
-
-buttonContainer.appendChild(upgrade1Button);
-buttonContainer.appendChild(upgrade2Button);
-buttonContainer.appendChild(upgrade3Button);
-
 const header = document.createElement("h1");
 header.innerHTML = gameName;
+
 app.append(header);
 app.append(smile);
 app.append(value);
-app.append(upgrade1Button);
-app.append(upgrade2Button);
-app.append(upgrade3Button);
 
-let costForUpgrade1 = 10;
-let costForUpgrade2 = 100;
-let costForUpgrade3 = 1000;
+interface Item {
+    name: string;
+    cost: number;
+    rate: number;
+}
+
+const availableItems: Item[] = [
+    { name: "Help... 🥸 costs:", cost: 10, rate: 0.1 },
+    { name: "is it time  🤡 ? costs:", cost: 100, rate: 2 },
+    { name: "Cmon! choose me :) costs:", cost: 1000, rate: 50 },
+];
+const buttons: HTMLButtonElement[] = [];
+availableItems.forEach((item, index) => {
+    //go through each element, creating a button associating to the item
+    const itemButton = document.createElement("button");
+    //adding an eventlistener to deal with purchases, passing index inorder to find item prices
+    itemButton.addEventListener("mousedown", () => upgradePurchase(index));
+    itemButton.innerHTML = `${item.name} (${item.cost} smiles!)`;
+    app.append(itemButton);
+    //hopefully this works
+    buttons.push(itemButton);
+});
+
+let totalUpgrades = 0;
+function upgradePurchase(index: number) {
+    const item = availableItems[index];
+    counter -= item.cost;
+    item.cost *= 1.15;
+    item.cost = Number(item.cost.toFixed(2));
+    buttons[index].innerHTML = `${item.name} (${item.cost} smiles!)`;
+    growthRate += item.rate;
+    totalUpgrades++;
+}
+
 let growthRate = 0.0;
 
 let lastTime = 0;
 
-let totalUpgrades = 0;
-
 function tick(now: number) {
     const elapsed = now - lastTime;
     lastTime = now;
+    //takes care of growth rate multiplier (factoring time elapsed by growth rate so in each frame the amount added to counter is larger. essentially a multiplier to a timer)
     counter += (growthRate * elapsed) / 1000;
 
     //here we take the time between two frames, then we add its difference to counter per frame.
     //through doing this we get 1 unit per second, working by converting milliseconds per difference of a frame and adding it
-    checkCounterLogic();
+    availableItems.forEach((item, index) => {
+        if (counter < item.cost) {
+            buttons[index].disabled = true;
+        } else {
+            buttons[index].disabled = false;
+        }
+    });
+    textChanges();
     requestAnimationFrame(tick);
 }
-function checkCounterLogic() {
+function textChanges() {
     if (counter > 0) {
         value.innerHTML = counter.toFixed(2) + " smiles..." + "<br/>";
     }
@@ -62,103 +86,20 @@ function checkCounterLogic() {
         value.innerHTML =
             counter.toFixed(2) + " smiles" + "<br/>" + growthRate.toFixed(2) + " per second.";
     }
-    upgrade1Button.disabled = counter < costForUpgrade1;
-    upgrade2Button.disabled = counter < costForUpgrade2;
-    upgrade3Button.disabled = counter < costForUpgrade3;
+    if (totalUpgrades >= 3) {
+        buttons[0].innerHTML = `YOU ARE Destroying me: (${availableItems[0].cost} smiles. smiles. smiles)`;
+    }
+    if (totalUpgrades >= 5) {
+        buttons[1].innerHTML = `Keep going 👹 costs: (${availableItems[1].cost} smiles! smiles smiles smiles)`;
+    }
+    if (totalUpgrades >= 50) {
+        buttons[0].innerHTML = `I'm dying. (${availableItems[0].cost} demon smiles)`;
+        buttons[1].innerHTML = `Keep going 👹 costs: ${availableItems[1].cost} smiles! smiles smiles smiles`;
+        buttons[2].innerHTML = `I'm dying. (${availableItems[2].cost} demon smiles)`;
+        smileEmoj = "👺";
+        smile.innerHTML = smileEmoj;
+        value.innerHTML = counter.toFixed(2) + " demon smiles..." + "<br/>";
+    }
 }
+
 requestAnimationFrame(tick);
-
-let upgrade1Emoj = "Help... 🥸 " + "<br/> costs: " + costForUpgrade1 + " smiles!";
-upgrade1Button.innerHTML = upgrade1Emoj;
-upgrade1Button.addEventListener("mousedown", function () {
-    upgrade1Purchase();
-});
-let upgrade2Emoji = "is it time  🤡 " + "<br/> costs: " + costForUpgrade2 + " smiles!";
-upgrade2Button.innerHTML = upgrade2Emoji;
-
-upgrade2Button.addEventListener("mousedown", function () {
-    upgrade2Purchase();
-});
-
-upgrade3Button.addEventListener("mousedown", function () {
-    upgrade3Purchase();
-});
-
-let upgrade3Emoji = "Cmon! choose me :)" + "<br/> costs: " + costForUpgrade3 + " smiles!";
-upgrade3Button.innerHTML = upgrade3Emoji;
-let upgrade1Counter: number = 0;
-function upgrade1Purchase() {
-    counter -= costForUpgrade1;
-    upgrade1Counter++;
-    totalUpgrades++;
-    //step 7
-
-    costForUpgrade1 *= 1.15;
-    costForUpgrade1 = Number(costForUpgrade1.toFixed(2));
-    if (upgrade1Counter > 1) {
-        //step 8
-        upgrade1Emoj =
-            "you are a fool. 🤕 (" +
-            upgrade1Counter +
-            ")<br/> costs: " +
-            costForUpgrade1 +
-            " smiles";
-    } else {
-        upgrade1Emoj =
-            "Help... 🥸 (" + upgrade1Counter + ")" + "<br/> costs: " + costForUpgrade1 + " smiles?";
-    }
-
-    upgrade1Button.innerHTML = upgrade1Emoj;
-    growthRate += 0.1;
-}
-let upgrade2Counter: number = 0;
-function upgrade2Purchase() {
-    counter -= costForUpgrade2;
-    costForUpgrade2 *= 1.15;
-    upgrade2Counter++;
-    totalUpgrades++;
-    costForUpgrade2 = Number(costForUpgrade2.toFixed(2));
-    if (upgrade2Counter > 4) {
-        upgrade2Emoji =
-            "STOP. Why do this to us?(" +
-            upgrade2Counter +
-            ")" +
-            "<br/> costs: " +
-            costForUpgrade2 +
-            " smiles.";
-    } else {
-        upgrade2Emoji =
-            "I don't know if this is right. 😬😬 (" +
-            upgrade2Counter +
-            ")" +
-            "<br/> costs: " +
-            costForUpgrade2 +
-            " smiles.";
-    }
-    upgrade2Button.innerHTML = upgrade2Emoji;
-    growthRate += 2;
-}
-let upgrade3Counter: number = 0;
-function upgrade3Purchase() {
-    upgrade3Counter++;
-    totalUpgrades++;
-    counter -= costForUpgrade3;
-    costForUpgrade3 *= 1.15;
-    costForUpgrade3 = Number(costForUpgrade3.toFixed(2));
-    upgrade3Emoji =
-        "HELP!!!! 🎃(" + upgrade3Counter + ")<br/> costs: " + costForUpgrade3 + " smiles.";
-    growthRate += 50;
-    upgrade3Button.innerHTML = upgrade3Emoji;
-}
-
-/*interface Item {
-    name: string,
-    cost: number,
-    rate: number
-  };
-  
-  const availableItems : Item[] = [
-    {name: "Help... 🥸", cost: 10, rate: 0.1},
-    {name: "is it time  🤡", cost: 100, rate: 2},
-    {name: "Cmon! choose me :)", cost: 1000, rate: 50},
-  ]; */
