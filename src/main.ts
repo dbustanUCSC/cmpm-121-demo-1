@@ -74,7 +74,7 @@ const availableItems: Item[] = [
         nameafterbutton3: "The creator",
         nameafterswitchup: "I'm dying. ",
         cost: 100000,
-        rate: 1000,
+        rate: 1000000,
         amountpurchased: 0,
         description: "The one and only.",
     },
@@ -97,16 +97,10 @@ function upgradePurchase(index: number) {
     item.cost *= 1.15;
     item.cost = Number(item.cost.toFixed(2));
     item.amountpurchased++;
-    buttons[
-        index
-    ].innerHTML = `<strong>${item.name} costs: (${item.cost} smiles!)</strong> <br/> ${item.description}`;
+    buttons[index].innerHTML = `<strong>${item.name} costs: (${item.cost} smiles!)</strong> <br/> ${item.description}`;
     growthRate += item.rate;
     totalUpgrades++;
-    if (index == 3) {
-        buttons[0].innerHTML = `${availableItems[0].nameafterbutton3} costs: (${availableItems[0].cost} smiles)`;
-        buttons[1].innerHTML = `${availableItems[1].nameafterbutton3} costs:  (${availableItems[1].cost} smiles)`;
-        buttons[2].innerHTML = `${availableItems[2].nameafterbutton3} costs: (${availableItems[2].cost} smiles)`;
-    }
+    //special case
 }
 
 let growthRate = 0.0;
@@ -127,33 +121,35 @@ function tick(now: number) {
         } else {
             buttons[index].disabled = false;
         }
+        textChanges(index);
     });
 
-    textChanges();
     requestAnimationFrame(tick);
 }
-function textChanges() {
+function textChanges(indexCheck: number) {
     if (counter > 0) {
         value.innerHTML = counter.toFixed(2) + " smiles..." + "<br/>";
     }
     if (totalUpgrades > 0) {
-        value.innerHTML =
-            counter.toFixed(2) + " smiles" + "<br/>" + growthRate.toFixed(2) + " per second.";
+        value.innerHTML = counter.toFixed(2) + " smiles" + "<br/>" + growthRate.toFixed(2) + " per second.";
     }
     if (totalUpgrades >= 100 || availableItems[4].amountpurchased >= 1) {
-        buttons[0].innerHTML = `${availableItems[0].nameafterswitchup} (${availableItems[0].cost} demon smiles)`;
-        buttons[1].innerHTML = `${availableItems[1].nameafterswitchup} ${availableItems[1].cost} smiles! smiles smiles smiles`;
-        buttons[2].innerHTML = `${availableItems[2].nameafterswitchup} (${availableItems[2].cost} demon smiles)`;
-        buttons[3].innerHTML = `${availableItems[3].nameafterswitchup} (${availableItems[3].cost} demon smiles)`;
-        buttons[4].innerHTML = `${availableItems[4].nameafterswitchup} (${availableItems[4].cost} demon smiles)`;
+        availableItems.forEach((item, index) => {
+            if (index == 1) {
+                buttons[index].innerHTML = `${item.nameafterswitchup} ${item.cost} smiles! smiles smiles smiles`;
+            } else {
+                buttons[index].innerHTML = `${item.nameafterswitchup} (${item.cost} demon smiles)`;
+            }
+        });
         smileEmoj = "👺";
         smile.innerHTML = smileEmoj;
-        value.innerHTML =
-            counter.toFixed(2) +
-            " demon smiles..." +
-            "<br/>" +
-            growthRate.toFixed(2) +
-            " per second";
+        value.innerHTML = counter.toFixed(2) + " demon smiles..." + "<br/>" + growthRate.toFixed(2) + " per second";
+    }
+    if (indexCheck == 3 && availableItems[3].amountpurchased >= 1) {
+        for (let i = 0; i < availableItems.length - 1; i++) {
+            let item: Item = availableItems[i];
+            buttons[i].innerHTML = `${item.nameafterbutton3} costs: (${item.cost} smiles)`;
+        }
     }
     if (counter > 10000) {
         gameName = "your game.";
