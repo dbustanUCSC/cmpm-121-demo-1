@@ -24,6 +24,8 @@ app.append(value);
 
 interface Item {
     name: string;
+    nameafterbutton3: string;
+    nameafterswitchup: string;
     cost: number;
     rate: number;
     amountpurchased: number;
@@ -31,9 +33,19 @@ interface Item {
 }
 
 const availableItems: Item[] = [
-    { name: "Help... 🥸", cost: 10, rate: 0.1, amountpurchased: 0, description: "help me." },
+    {
+        name: "Help... 🥸",
+        nameafterbutton3: "You regret it...",
+        nameafterswitchup: "I'm dying. ",
+        cost: 10,
+        rate: 0.1,
+        amountpurchased: 0,
+        description: "help me.",
+    },
     {
         name: "is it time  🤡 ? ",
+        nameafterbutton3: "You regret it...",
+        nameafterswitchup: "Keep going 👹 ",
         cost: 100,
         rate: 2,
         amountpurchased: 0,
@@ -41,6 +53,8 @@ const availableItems: Item[] = [
     },
     {
         name: "Cmon! choose me :) ",
+        nameafterbutton3: "You regret it...",
+        nameafterswitchup: "I'm dying. ",
         cost: 1000,
         rate: 50,
         amountpurchased: 0,
@@ -48,6 +62,8 @@ const availableItems: Item[] = [
     },
     {
         name: "If you buy me you will regret it. ",
+        nameafterbutton3: "If you buy me you will regret it.",
+        nameafterswitchup: "I'm dying. ",
         cost: 10000,
         rate: 100,
         amountpurchased: 0,
@@ -55,6 +71,8 @@ const availableItems: Item[] = [
     },
     {
         name: "The creator.",
+        nameafterbutton3: "The creator",
+        nameafterswitchup: "I'm dying. ",
         cost: 100000,
         rate: 1000,
         amountpurchased: 0,
@@ -85,9 +103,9 @@ function upgradePurchase(index: number) {
     growthRate += item.rate;
     totalUpgrades++;
     if (index == 3) {
-        buttons[0].innerHTML = `You regret it... costs: (${availableItems[0].cost} smiles)`;
-        buttons[1].innerHTML = `You regret it... costs:  (${availableItems[1].cost} smiles)`;
-        buttons[2].innerHTML = `You regret it... costs: (${availableItems[2].cost} smiles)`;
+        buttons[0].innerHTML = `${availableItems[0].nameafterbutton3} costs: (${availableItems[0].cost} smiles)`;
+        buttons[1].innerHTML = `${availableItems[1].nameafterbutton3} costs:  (${availableItems[1].cost} smiles)`;
+        buttons[2].innerHTML = `${availableItems[2].nameafterbutton3} costs: (${availableItems[2].cost} smiles)`;
     }
 }
 
@@ -123,11 +141,11 @@ function textChanges() {
             counter.toFixed(2) + " smiles" + "<br/>" + growthRate.toFixed(2) + " per second.";
     }
     if (totalUpgrades >= 100 || availableItems[4].amountpurchased >= 1) {
-        buttons[0].innerHTML = `I'm dying. (${availableItems[0].cost} demon smiles)`;
-        buttons[1].innerHTML = `Keep going 👹 costs: ${availableItems[1].cost} smiles! smiles smiles smiles`;
-        buttons[2].innerHTML = `I'm dying. (${availableItems[2].cost} demon smiles)`;
-        buttons[3].innerHTML = `I'm dying. (${availableItems[3].cost} demon smiles)`;
-        buttons[4].innerHTML = `I'm dying. (${availableItems[4].cost} demon smiles)`;
+        buttons[0].innerHTML = `${availableItems[0].nameafterswitchup} (${availableItems[0].cost} demon smiles)`;
+        buttons[1].innerHTML = `${availableItems[1].nameafterswitchup} ${availableItems[1].cost} smiles! smiles smiles smiles`;
+        buttons[2].innerHTML = `${availableItems[2].nameafterswitchup} (${availableItems[2].cost} demon smiles)`;
+        buttons[3].innerHTML = `${availableItems[3].nameafterswitchup} (${availableItems[3].cost} demon smiles)`;
+        buttons[4].innerHTML = `${availableItems[4].nameafterswitchup} (${availableItems[4].cost} demon smiles)`;
         smileEmoj = "👺";
         smile.innerHTML = smileEmoj;
         value.innerHTML =
