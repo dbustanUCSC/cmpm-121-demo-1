@@ -147,7 +147,7 @@ function textChanges(indexCheck: number) {
     }
     if (indexCheck == 3 && availableItems[3].amountpurchased >= 1) {
         for (let i = 0; i < availableItems.length - 1; i++) {
-            let item: Item = availableItems[i];
+            const item: Item = availableItems[i];
             buttons[i].innerHTML = `${item.nameafterbutton3} costs: (${item.cost} smiles)`;
         }
     }
