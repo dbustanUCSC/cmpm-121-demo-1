@@ -1,11 +1,11 @@
 import "./style.css";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
-const gameName = "our game";
+let gameName = "our game";
 
 document.title = gameName;
 const smile = document.createElement("button");
-let smileEmoj = "😀";
+let smileEmoj = "😀 ";
 smile.innerHTML = smileEmoj;
 const value = document.createElement("div");
 
@@ -26,22 +26,49 @@ interface Item {
     name: string;
     cost: number;
     rate: number;
+    amountpurchased: number;
+    description: string;
 }
 
 const availableItems: Item[] = [
-    { name: "Help... 🥸 costs:", cost: 10, rate: 0.1 },
-    { name: "is it time  🤡 ? costs:", cost: 100, rate: 2 },
-    { name: "Cmon! choose me :) costs:", cost: 1000, rate: 50 },
+    { name: "Help... 🥸", cost: 10, rate: 0.1, amountpurchased: 0, description: "help me." },
+    {
+        name: "is it time  🤡 ? ",
+        cost: 100,
+        rate: 2,
+        amountpurchased: 0,
+        description: "I don't know!",
+    },
+    {
+        name: "Cmon! choose me :) ",
+        cost: 1000,
+        rate: 50,
+        amountpurchased: 0,
+        description: "You should.",
+    },
+    {
+        name: "If you buy me you will regret it. ",
+        cost: 10000,
+        rate: 100,
+        amountpurchased: 0,
+        description: "I promise.",
+    },
+    {
+        name: "The creator.",
+        cost: 100000,
+        rate: 1000,
+        amountpurchased: 0,
+        description: "The one and only.",
+    },
 ];
 const buttons: HTMLButtonElement[] = [];
+//used to make buttons for each item, and assigning them the function
 availableItems.forEach((item, index) => {
     //go through each element, creating a button associating to the item
     const itemButton = document.createElement("button");
-    //adding an eventlistener to deal with purchases, passing index inorder to find item prices
     itemButton.addEventListener("mousedown", () => upgradePurchase(index));
-    itemButton.innerHTML = `${item.name} (${item.cost} smiles!)`;
+    itemButton.innerHTML = `<strong>${item.name} costs: (${item.cost} smiles!)</strong> <br/> ${item.description}`;
     app.append(itemButton);
-    //hopefully this works
     buttons.push(itemButton);
 });
 
@@ -51,9 +78,17 @@ function upgradePurchase(index: number) {
     counter -= item.cost;
     item.cost *= 1.15;
     item.cost = Number(item.cost.toFixed(2));
-    buttons[index].innerHTML = `${item.name} (${item.cost} smiles!)`;
+    item.amountpurchased++;
+    buttons[
+        index
+    ].innerHTML = `<strong>${item.name} costs: (${item.cost} smiles!)</strong> <br/> ${item.description}`;
     growthRate += item.rate;
     totalUpgrades++;
+    if (index == 3) {
+        buttons[0].innerHTML = `You regret it... costs: (${availableItems[0].cost} smiles)`;
+        buttons[1].innerHTML = `You regret it... costs:  (${availableItems[1].cost} smiles)`;
+        buttons[2].innerHTML = `You regret it... costs: (${availableItems[2].cost} smiles)`;
+    }
 }
 
 let growthRate = 0.0;
@@ -75,6 +110,7 @@ function tick(now: number) {
             buttons[index].disabled = false;
         }
     });
+
     textChanges();
     requestAnimationFrame(tick);
 }
@@ -86,19 +122,25 @@ function textChanges() {
         value.innerHTML =
             counter.toFixed(2) + " smiles" + "<br/>" + growthRate.toFixed(2) + " per second.";
     }
-    if (totalUpgrades >= 3) {
-        buttons[0].innerHTML = `YOU ARE Destroying me: (${availableItems[0].cost} smiles. smiles. smiles)`;
-    }
-    if (totalUpgrades >= 5) {
-        buttons[1].innerHTML = `Keep going 👹 costs: (${availableItems[1].cost} smiles! smiles smiles smiles)`;
-    }
-    if (totalUpgrades >= 50) {
+    if (totalUpgrades >= 100 || availableItems[4].amountpurchased >= 1) {
         buttons[0].innerHTML = `I'm dying. (${availableItems[0].cost} demon smiles)`;
         buttons[1].innerHTML = `Keep going 👹 costs: ${availableItems[1].cost} smiles! smiles smiles smiles`;
         buttons[2].innerHTML = `I'm dying. (${availableItems[2].cost} demon smiles)`;
+        buttons[3].innerHTML = `I'm dying. (${availableItems[3].cost} demon smiles)`;
+        buttons[4].innerHTML = `I'm dying. (${availableItems[4].cost} demon smiles)`;
         smileEmoj = "👺";
         smile.innerHTML = smileEmoj;
-        value.innerHTML = counter.toFixed(2) + " demon smiles..." + "<br/>";
+        value.innerHTML =
+            counter.toFixed(2) +
+            " demon smiles..." +
+            "<br/>" +
+            growthRate.toFixed(2) +
+            " per second";
+    }
+    if (counter > 10000) {
+        gameName = "your game.";
+        document.title = gameName;
+        header.innerHTML = gameName;
     }
 }
 
