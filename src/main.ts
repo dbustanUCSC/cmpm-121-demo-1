@@ -80,9 +80,8 @@ const availableItems: Item[] = [
     },
 ];
 const buttons: HTMLButtonElement[] = [];
-//used to make buttons for each item, and assigning them the function
+
 availableItems.forEach((item, index) => {
-    //go through each element, creating a button associating to the item
     const itemButton = document.createElement("button");
     itemButton.addEventListener("mousedown", () => upgradePurchase(index));
     itemButton.innerHTML = `<strong>${item.name} costs: (${item.cost} smiles!)</strong> <br/> ${item.description}`;
@@ -100,7 +99,6 @@ function upgradePurchase(index: number) {
     buttons[index].innerHTML = `<strong>${item.name} costs: (${item.cost} smiles!)</strong> <br/> ${item.description}`;
     growthRate += item.rate;
     totalUpgrades++;
-    //special case
 }
 
 let growthRate = 0.0;
@@ -110,11 +108,8 @@ let lastTime = 0;
 function tick(now: number) {
     const elapsed = now - lastTime;
     lastTime = now;
-    //takes care of growth rate multiplier (factoring time elapsed by growth rate so in each frame the amount added to counter is larger. essentially a multiplier to a timer)
     counter += (growthRate * elapsed) / 1000;
 
-    //here we take the time between two frames, then we add its difference to counter per frame.
-    //through doing this we get 1 unit per second, working by converting milliseconds per difference of a frame and adding it
     availableItems.forEach((item, index) => {
         if (counter < item.cost) {
             buttons[index].disabled = true;
